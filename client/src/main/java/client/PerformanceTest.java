@@ -14,15 +14,18 @@ public class PerformanceTest {
 	private long startMillis;
 	private int numberOfThreads = 0;
 	private int numberOfIterations = 0;
+	private int messageSizeInMB;
 
-	public PerformanceTest(int numberOfThreads, int numberOfIterations) {
+	public PerformanceTest(int numberOfThreads, int numberOfIterations, int messageSizeInMB) {
 		this.numberOfThreads = numberOfThreads;
 		this.numberOfIterations = numberOfIterations;
+		this.messageSizeInMB = messageSizeInMB;
 	}
 
 	public static void main(String args[]) {
-		if (args.length != 2) {
-			System.err.println("Please provide two arguments as numbers: numberOfIterationsPerThread numberOfThreads");
+		if (args.length != 3) {
+			System.err
+					.println("Please provide three arguments as numbers: numberOfIterationsPerThread numberOfThreads messsageSizeInMB");
 			return;
 		}
 		int numberOfIterationsPerThread = 0;
@@ -39,7 +42,15 @@ public class PerformanceTest {
 			System.err.println("Please provide a number for numberOfThreads.");
 			return;
 		}
-		PerformanceTest performanceTest = new PerformanceTest(numberOfThreads, numberOfIterationsPerThread);
+		int messageSizeInMB = 0;
+		try {
+			messageSizeInMB = Integer.valueOf(args[2]);
+		} catch (NumberFormatException e) {
+			System.err.println("Please provide a number for messageSizeInMB.");
+			return;
+		}
+		PerformanceTest performanceTest = new PerformanceTest(numberOfThreads, numberOfIterationsPerThread,
+				messageSizeInMB);
 		performanceTest.run();
 	}
 
@@ -49,7 +60,7 @@ public class PerformanceTest {
 		ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(numberOfThreads, numberOfThreads, 10,
 				TimeUnit.SECONDS, workQueue);
 		for (int i = 0; i < numberOfThreads; i++) {
-			threadPoolExecutor.execute(new PerformanceTestRunnable(numberOfIterations, this));
+			threadPoolExecutor.execute(new PerformanceTestRunnable(numberOfIterations, this, messageSizeInMB));
 		}
 		threadPoolExecutor.shutdown();
 	}
@@ -60,11 +71,11 @@ public class PerformanceTest {
 			long totalMillis = System.currentTimeMillis() - startMillis;
 			int totalItems = numberOfThreads * numberOfIterations;
 			double itemsPerSecond = ((double) totalItems / (double) totalMillis) * 1000.0;
-			double kbytesPerSecond = (((double) totalItems * 1024.0) / (double) totalMillis) * 1000.0;
+			double bytesPerSecond = (((double) totalItems * 1024.0 * 1024.0) / (double) totalMillis) * 1000.0;
 			logger.info(String
-					.format("%s Threads, %s iterations per Thread=%s items uploaded in %s milliseconds: %f items/s, %f KBytes/s.",
-							numberOfThreads, numberOfIterations, totalItems, totalMillis, itemsPerSecond,
-							kbytesPerSecond));
+					.format("%s Threads, %s iterations per Thread=%s items of %s MB uploaded in %s milliseconds: %f items/s, %f Bytes/s.",
+							numberOfThreads, numberOfIterations, totalItems, messageSizeInMB, totalMillis,
+							itemsPerSecond, bytesPerSecond));
 		}
 	}
 }

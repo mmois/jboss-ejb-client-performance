@@ -17,17 +17,19 @@ public class PerformanceTestRunnable implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(PerformanceTestRunnable.class);
 	private int numberOfIterations;
 	private PerformanceTest performanceTest;
+	private int messageSize;
 
-	public PerformanceTestRunnable(int numberOfIterations, PerformanceTest performanceTest) {
+	public PerformanceTestRunnable(int numberOfIterations, PerformanceTest performanceTest, int messageSize) {
 		this.numberOfIterations = numberOfIterations;
 		this.performanceTest = performanceTest;
+		this.messageSize = messageSize;
 	}
 
 	public void run() {
 		try {
-			PerformanceTestRemote performanceTestRemote = lookupRemoteBeanRemoteNaming();
+			PerformanceTestRemote performanceTestRemote = lookupRemoteBean();
 			for (int i = 0; i < numberOfIterations; i++) {
-				performanceTestRemote.sendBytes(createRandomByteArray(1024 * 1024));
+				performanceTestRemote.sendBytes(createRandomByteArray(messageSize * 1024 * 1024));
 			}
 			performanceTest.tellFinished();
 		} catch (NamingException e) {

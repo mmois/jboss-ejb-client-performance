@@ -9,3 +9,5 @@ server/server.ejb/.classpath
 .settings*
 client/.classpath
 client/target/*
+client/performance_test.log
+server/server.ejb/target/*
