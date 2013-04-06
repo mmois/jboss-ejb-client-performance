@@ -4,3 +4,8 @@
 *.jar
 *.war
 *.ear
+.project
+server/server.ejb/.classpath
+.settings*
+client/.classpath
+client/target/*
