@@ -39,16 +39,21 @@
 		<dependency>
 			<groupId>org.jboss.as</groupId>
 			<artifactId>jboss-as-ejb-client-bom</artifactId>
-			<version>7.2.0.Alpha1-SNAPSHOT</version>
+			<version>7.2.0.Alpha1-redhat-4</version>
 			<type>pom</type>
+			<!-- <exclusions>
+				<exclusion>
+					<groupId>org.jboss</groupId>
+					<artifactId>jboss-ejb-client</artifactId>
+				</exclusion>
+			</exclusions> -->
 		</dependency>
 		<!-- 
 		<dependency>
 			<groupId>org.jboss</groupId>
 			<artifactId>jboss-ejb-client</artifactId>
-			<version>1.0.12.Final</version>
-		</dependency>
-		 -->
+			<version>1.0.18.Final</version>
+		</dependency> -->
 	</dependencies>
 
 	<build>
@@ -82,7 +87,7 @@
 		<repository>
 			<id>jboss-public-repository-group</id>
 			<name>JBoss Public Maven Repository Group</name>
-			<url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+			<url>http://maven.repository.redhat.com/earlyaccess/all/</url>
 			<layout>default</layout>
 			<releases>
 				<enabled>true</enabled>

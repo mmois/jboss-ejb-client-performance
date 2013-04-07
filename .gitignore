@@ -11,3 +11,6 @@ client/.classpath
 client/target/*
 client/performance_test.log
 server/server.ejb/target/*
+client/performance_test.log.1
+client/performance_test.log
+client/performance_test.log
