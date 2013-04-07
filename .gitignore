@@ -3,7 +3,6 @@
 # Package Files #
 *.jar
 *.war
-*.ear
 .project
 server/server.ejb/.classpath
 .settings*
@@ -11,3 +10,5 @@ client/.classpath
 client/target/*
 client/performance_test.log
 server/server.ejb/target/*
+server/server.ear/target/*
+client/performance_test.log.1
