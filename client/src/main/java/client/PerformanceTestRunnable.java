@@ -28,8 +28,10 @@ public class PerformanceTestRunnable implements Runnable {
 	public void run() {
 		try {
 			PerformanceTestRemote performanceTestRemote = lookupRemoteBean();
+			logger.debug("Looked up remote bean.");
 			for (int i = 0; i < numberOfIterations; i++) {
 				performanceTestRemote.sendBytes(createRandomByteArray(messageSize * 1024 * 1024));
+				logger.debug("Sent bytes to server.");
 			}
 			performanceTest.tellFinished();
 		} catch (NamingException e) {
