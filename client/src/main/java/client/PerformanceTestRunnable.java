@@ -30,7 +30,7 @@ public class PerformanceTestRunnable implements Runnable {
 			PerformanceTestRemote performanceTestRemote = lookupRemoteBean();
 			logger.debug("Looked up remote bean.");
 			for (int i = 0; i < numberOfIterations; i++) {
-				performanceTestRemote.sendBytes(createRandomByteArray(messageSize * 1024 * 1024));
+				performanceTestRemote.sendBytes(createByteArray(messageSize * 1024 * 1024));
 				logger.debug("Sent bytes to server.");
 			}
 			performanceTest.tellFinished();
@@ -39,10 +39,10 @@ public class PerformanceTestRunnable implements Runnable {
 		}
 	}
 
-	private byte[] createRandomByteArray(int size) {
+	private byte[] createByteArray(int size) {
 		byte[] retVal = new byte[size];
 		for (int i = 0; i < retVal.length; i++) {
-			retVal[i] = (byte) Math.random();
+			retVal[i] = (byte) i;
 		}
 		return retVal;
 	}

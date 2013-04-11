@@ -72,10 +72,11 @@ public class PerformanceTest {
 			int totalItems = numberOfThreads * numberOfIterations;
 			double itemsPerSecond = ((double) totalItems / (double) totalMillis) * 1000.0;
 			double bytesPerSecond = (((double) totalItems * 1024.0 * 1024.0) / (double) totalMillis) * 1000.0;
+			double mbBytesPerSecond = bytesPerSecond / (1024 * 1024);
 			logger.info(String
-					.format("%s Threads, %s iterations per Thread=%s items of %s MB uploaded in %s milliseconds: %f items/s, %f Bytes/s.",
+					.format("%s Threads, %s iterations per Thread=%s items of %s MB uploaded in %s milliseconds: %f items/s, %f Bytes/s, %f MB/s.",
 							numberOfThreads, numberOfIterations, totalItems, messageSizeInMB, totalMillis,
-							itemsPerSecond, bytesPerSecond));
+							itemsPerSecond, bytesPerSecond, mbBytesPerSecond));
 		}
 	}
 }
