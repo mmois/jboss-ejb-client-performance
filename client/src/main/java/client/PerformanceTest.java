@@ -71,7 +71,7 @@ public class PerformanceTest {
 			long totalMillis = System.currentTimeMillis() - startMillis;
 			int totalItems = numberOfThreads * numberOfIterations;
 			double itemsPerSecond = ((double) totalItems / (double) totalMillis) * 1000.0;
-			double bytesPerSecond = (((double) totalItems * 1024.0 * 1024.0) / (double) totalMillis) * 1000.0;
+			double bytesPerSecond = (((double) totalItems * 1024.0 * 1024.0 * messageSizeInMB) / (double) totalMillis) * 1000.0;
 			double mbBytesPerSecond = bytesPerSecond / (1024 * 1024);
 			logger.info(String
 					.format("%s Threads, %s iterations per Thread=%s items of %s MB uploaded in %s milliseconds: %f items/s, %f Bytes/s, %f MB/s.",
