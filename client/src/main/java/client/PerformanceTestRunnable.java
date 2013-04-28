@@ -1,5 +1,7 @@
 package client;
 
+import java.io.File;
+import java.io.FileReader;
 import java.util.Hashtable;
 import java.util.Properties;
 
@@ -7,6 +9,11 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import org.jboss.ejb.client.ContextSelector;
+import org.jboss.ejb.client.EJBClientConfiguration;
+import org.jboss.ejb.client.EJBClientContext;
+import org.jboss.ejb.client.PropertiesBasedEJBClientConfiguration;
+import org.jboss.ejb.client.remoting.ConfigBasedEJBClientContextSelector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,11 +34,12 @@ public class PerformanceTestRunnable implements Runnable {
 
 	public void run() {
 		try {
-			PerformanceTestRemote performanceTestRemote = lookupRemoteBean();
-			logger.debug("Looked up remote bean.");
 			for (int i = 0; i < numberOfIterations; i++) {
+				PerformanceTestRemote performanceTestRemote = lookupRemoteBean();
+				logger.debug("Looked up remote bean.");
 				performanceTestRemote.sendBytes(createByteArray(messageSize * 1024 * 1024));
 				logger.debug("Sent bytes to server.");
+				performanceTestRemote.remove();
 			}
 			performanceTest.tellFinished();
 		} catch (NamingException e) {
@@ -59,8 +67,24 @@ public class PerformanceTestRunnable implements Runnable {
 		final String viewClassName = PerformanceTestRemote.class.getName();
 		String lookupString = "ejb:" + appName + "/" + moduleName + "/" + distinctName + "/" + beanName + "!"
 				+ viewClassName + "?stateful";
-		logger.debug(String.format("Lookking up: %s", lookupString));
+		logger.debug(String.format("Looking up: %s", lookupString));
 		return (PerformanceTestRemote) context.lookup(lookupString);
+	}
+
+	private void setEjbClientContextSelector() {
+		final Properties clientConfigProps = new Properties();
+		try {
+			clientConfigProps.load(new FileReader(new File("src/main/resources/jboss-ejb-client.properties")));
+		} catch (Exception e) {
+			logger.error("Faild to load properties: " + e.getMessage(), e);
+			return;
+		}
+
+		final EJBClientConfiguration ejbClientConfiguration = new PropertiesBasedEJBClientConfiguration(
+				clientConfigProps);
+		final ContextSelector<EJBClientContext> ejbClientContextSelector = new ConfigBasedEJBClientContextSelector(
+				ejbClientConfiguration);
+		EJBClientContext.setSelector(ejbClientContextSelector);
 	}
 
 	private PerformanceTestRemote lookupRemoteBeanRemoteNaming() throws NamingException {
