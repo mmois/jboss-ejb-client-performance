@@ -71,7 +71,7 @@ public class PerformanceTestRunnable implements Runnable {
 		return (PerformanceTestRemote) context.lookup(lookupString);
 	}
 
-	private void setEjbClientContextSelector() {
+	public static void setEjbClientContextSelector() {
 		final Properties clientConfigProps = new Properties();
 		try {
 			clientConfigProps.load(new FileReader(new File("src/main/resources/jboss-ejb-client.properties")));
